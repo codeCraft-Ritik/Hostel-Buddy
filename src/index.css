@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+    background-color: #0f0c29;
+    background-image: linear-gradient(315deg, #0f0c29 0%, #302b63 74%, #24243e 100%);
+    color: #e0e0e0;
+    scroll-behavior: smooth;
+}
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.1) 20%,
+            rgba(255, 255, 255, 0.2) 60%,
+            rgba(255, 255, 255, 0) 100%);
+    animation: shimmer 2s cubic-bezier(0.65, 0.05, 0.36, 1.08) infinite;
+    content: "";
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.bg-nightfall-card {
+    background-color: rgba(22, 33, 62, 0.7); /* Semi-transparent dark blue */
+    backdrop-filter: blur(10px);
+}
+
+.text-accent-purple {
+    color: #a259ff;
+}
+
+/* Updated constellation background effect to match the reference image closely */
+.bg-constellation {
+    background-image: 
+        url('data:image/svg+xml;utf8,<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f1" x="0" y="0" width="200%" height="200%"><feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" /><feGaussianBlur result="blurOut" in="offOut" stdDeviation="1" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" /></filter></defs><g filter="url(%23f1)"><circle cx="10" cy="10" r="3" fill="%23a259ff" opacity="0.3"/><circle cx="50" cy="30" r="3" fill="%23a259ff" opacity="0.3"/><circle cx="90" cy="50" r="3" fill="%23a259ff" opacity="0.3"/><circle cx="30" cy="70" r="3" fill="%23a259ff" opacity="0.3"/><circle cx="70" cy="90" r="3" fill="%23a259ff" opacity="0.3"/><line x1="10" y1="10" x2="50" y2="30" stroke="%23a259ff" stroke-width="0.5" opacity="0.1"/><line x1="50" y1="30" x2="90" y2="50" stroke="%23a259ff" stroke-width="0.5" opacity="0.1"/><line x1="90" y1="50" x2="30" y2="70" stroke="%23a259ff" stroke-width="0.5" opacity="0.1"/><line x1="30" y1="70" x2="70" y2="90" stroke="%23a259ff" stroke-width="0.5" opacity="0.1"/><line x1="70" y1="90" x2="10" y2="10" stroke="%23a259ff" stroke-width="0.5" opacity="0.1"/></g></svg>');
+    background-size: 200px 200px; /* Adjust grid size for density */
+    background-repeat: repeat;
+    background-position: center center;
+    /* Adding subtle radial gradients for the overall light source feel */
+    background-blend-mode: overlay; /* Blends SVG with the gradient */
+    position: relative; /* For pseudo-elements */
+    overflow: hidden; /* Ensures dots don't spill */
+}
+
+/* Adding radial gradients as pseudo-elements for overall glow effect, similar to reference */
+.bg-constellation::before,
+.bg-constellation::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px); /* Soft glow */
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.bg-constellation::before {
+    background: radial-gradient(circle, #a259ff, transparent 70%);
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -100px;
+}
+
+.bg-constellation::after {
+    background: radial-gradient(circle, #5f27cd, transparent 70%);
+    width: 350px;
+    height: 350px;
+    bottom: -100px;
+    right: -100px;
+}
+
+
+
+
+/* src/index.css */
+
+/* ... (keep all your existing CSS above this) ... */
+
+/* --- Add this new code for the animated button --- */
+.animated-button {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  padding: 0.9rem 2rem;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.05rem;
+  font-weight: 700;
+  font-size: 17px;
+  border-radius: 500px;
+  overflow: hidden;
+  background: #f96d00; /* Your original Sign In color */
+  color: ghostwhite;
+}
+
+.animated-button span {
+  position: relative;
+  z-index: 10;
+  transition: color 0.4s;
+}
+
+.animated-button:hover span {
+  color: black;
+}
+
+.animated-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120%;
+  height: 100%;
+  z-index: 0;
+  background: #000;
+  transform: skew(30deg);
+  transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
+}
+
+.animated-button:hover::before {
+  transform: translate3d(100%, 0, 0);
+}

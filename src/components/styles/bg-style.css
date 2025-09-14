@@ -1,0 +1,30 @@
+/* Static background for the header */
+.bg-banner {
+    background-color: #0f3460;
+    background-image: url('../../assets/Header.png');
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: contain;
+}
+
+/* Class for the animated gradient text */
+.text-animated-gradient {
+    background: linear-gradient(-45deg, #e0b1cb, #a259ff, #5f27cd, #341f97);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-animation 8s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
