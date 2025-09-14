@@ -1,5 +1,3 @@
-// src/components/ProductsContainer.jsx
-
 import { Typography } from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
@@ -7,8 +5,8 @@ import ProductCardSkeleton from './skeleton/ProductCardSkeleton';
 import { getDataFromApi } from '../utility/api';
 
 const ProductsContainer = ({ selectedCategories, search }) => {
-    const [products, setProducts] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [products, setProducts] = useState(null); // Use null to check initial load
+    const [loading, setLoading] = useState(true); // Start in loading state
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -18,30 +16,52 @@ const ProductsContainer = ({ selectedCategories, search }) => {
 
     useEffect(() => {
         setLoading(true);
-
         const categoryIds = selectedCategories.map(cat => cat._id);
 
-        // Send the array of IDs instead of the full objects.
         getDataFromApi("/products/all", { page, categoryIds, search })
             .then((data) => {
-                setProducts(data.products);
+                if (data.success) {
+                    setProducts(data.products);
+                    setTotalPages(data.totalPages);
+                } else {
+                    setProducts([]); // Set to empty array on API error
+                }
+            })
+            .catch((err) => {
+                // --- THIS IS THE CRITICAL FIX ---
+                // Add a .catch block to handle network errors
+                console.error("Failed to fetch products:", err);
+                setProducts([]); // Set to empty array on failure
+                // --- END CATCH BLOCK ---
+            })
+            .finally(() => {
+                // --- THIS IS ALSO CRITICAL ---
+                // Add a .finally() block to ensure loading is ALWAYS set to false
                 setLoading(false);
-                setTotalPages(data.totalPages);
+                // --- END FINALLY BLOCK ---
             });
     }, [page, selectedCategories, search]);
 
     return (
         <div className='flex-1'>
-            <div className='py-5 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
-                {products?.map((product) => (<ProductCard key={product._id} product={product} />))}
+            <div className='py-5 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
+                {/* Only map if products is an array and not loading */}
+                {products && !loading && products.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                ))}
+                
+                {/* Only show skeletons when loading is true */}
                 {loading && ([...Array(8)].map((_, index) => <ProductCardSkeleton key={index} />))}
             </div>
+            
+            {/* Show "No products" only if NOT loading AND products array is empty */}
             {products?.length === 0 && !loading && (
-                <Typography as="h3" color="blue-gray" className="font-bold text-center text-lg transition-all duration-200">
-                    No products found
+                <Typography as="h3" color="white" className="font-bold text-center text-lg transition-all duration-200">
+                    No products found.
                 </Typography>
             )}
-            {(page < totalPages && products?.length > 0) && (
+
+            {(page < totalPages && products?.length > 0 && !loading) && (
                 <div className='flex justify-center mt-8'>
                     <Typography 
                         onClick={handleNextPage} 
