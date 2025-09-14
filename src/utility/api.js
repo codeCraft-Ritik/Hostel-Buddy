@@ -1,9 +1,13 @@
+// src/utility/api.js
+
 import axios from "axios";
 import { fetchToken } from './jwtLocalStorage.js';
 
+// This is the CRITICAL line. It reads the backend URL from the Vercel environment variable.
+const BASE_URL = import.meta.env.VITE_API_URL; 
+
 const getHeaders = () => {
   const token = fetchToken();
-  // If a token exists, return the Authorization header, otherwise return empty object
   return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
@@ -11,16 +15,15 @@ const apiRequest = async (method, url, data = null, params = null) => {
   try {
     const config = {
       method,
-      url: `/api/v1${url}`, 
+      url: `${BASE_URL}${url}`, // This combines your live URL with the specific endpoint
       data,
       params,
-      headers: getHeaders(), 
+      headers: getHeaders(),
     };
     const response = await axios(config);
     return response.data;
   } catch (err) {
     console.error(`Error ${method}ing data to ${url}:`, err);
-   
     throw err;
   }
 };
